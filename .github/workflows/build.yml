@@ -3,48 +3,54 @@ name: Termux GCC RiscV
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
     # manual trigger
   #schedule:
   #  - cron: '0 0 * * *' # https://crontab.guru
 
+defaults:
+  run:
+    shell: msys2 {0}
+
 jobs:
   build:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@main
+      - name: '${{ matrix.icon }} Setup MSYS2'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MSYS
+          update: true
+          path-type: strict
+          
+      - name: install git and docker
+        run: |
+          pacman -Sy
+          pacman -S --noconfirm --needed git docker
 
-    - name: Trust this directory
-      run: git config --global --add safe.directory '*' # v2.35.3 or later
+      - name: clone termux packages
+        run: |
+          git clone --recursive https://github.com/termux/termux-packages
 
-    - name: clone termux packages
-      shell: bash
-      run: |
-        git clone --recursive https://github.com/termux/termux-packages
+      - name: build gcc
+        run: |
+          cd termux-packages
+          ./scripts/run-docker.sh git clone https://github.com/ZLangJIT/termux-gcc-riscv packages/gcc-riscv
+          ./scripts/run-docker.sh ./build-package.sh -I gcc-riscv
 
-    - name: build gcc
-      shell: powershell
-      run: |
-        cd termux-packages
-        ./scripts/run-docker.ps1 git clone https://github.com/ZLangJIT/termux-gcc-riscv packages/gcc-riscv
-        ./scripts/run-docker.ps1 ./build-package.sh -I gcc-riscv
+      - name: list files
+        run: |
+          cd termux-packages
+          ls -l
 
-    - name: list files
-      shell: bash
-      run: |
-        cd termux-packages
-        ls -l
-
-    - name: Release package
-      uses: softprops/action-gh-release@master
-      with:
-        name: gcc-riscv
-        tag_name:  gcc-risc
-        body: |
-          gcc riscv
-        files: |
-          gcc.deb
-        token: ${{ secrets.GITHUB_TOKEN }}
-        fail_on_unmatched_files: true
+      - name: Release package
+        uses: softprops/action-gh-release@master
+        with:
+          name: gcc-riscv
+          tag_name:  gcc-risc
+          body: |
+            gcc riscv
+          files: |
+            gcc.deb
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_unmatched_files: true
