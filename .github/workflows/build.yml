@@ -67,7 +67,7 @@ jobs:
         run: |
           cd qemu_app/alpine
           ./poweroff_alpine.sh
-          ./poweron_alpine.sh
+          . ./poweron_alpine.sh
 
       - name: qemu - clone termux packages
         run: |
