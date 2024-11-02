@@ -72,7 +72,6 @@ jobs:
         run: |
           cd qemu_app/alpine
           ./exe.sh "sudo apk add docker"
-          ./exe.sh "sudo addgroup ${USER} docker"
           ./exe.sh "sudo rc-update add docker default"
           ./exe.sh "sudo service docker start"
           ./exe.sh "sudo docker info"
@@ -80,7 +79,9 @@ jobs:
       - name: qemu - docker - build gcc riscv
         run: |
           cd qemu_app/alpine
-          ./exe.sh "cd termux-packages ; sudo ./scripts/run-docker.sh git clone https://github.com/ZLangJIT/termux-gcc-riscv packages/gcc-riscv"
+          #./exe.sh "cd termux-packages ; sudo ./scripts/run-docker.sh git clone https://github.com/ZLangJIT/termux-gcc-riscv /tmp/gcc-riscv"
+          #./exe.sh "cd termux-packages ; sudo ./scripts/run-docker.sh sudo mv /tmp/gcc-riscv packages/gcc-riscv"
+          ./exe.sh "cd termux-packages ; sudo ./scripts/run-docker.sh sudo git clone https://github.com/ZLangJIT/termux-gcc-riscv packages/gcc-riscv --depth=1"
           ./exe.sh "cd termux-packages ; sudo ./scripts/run-docker.sh ./build-package.sh -I gcc-riscv"
 
       - name: qemu - list files
