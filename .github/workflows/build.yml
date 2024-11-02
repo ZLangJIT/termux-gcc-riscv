@@ -25,7 +25,7 @@ jobs:
         git clone --recursive https://github.com/termux/termux-packages
 
     - name: build gcc
-      shell: bash
+      shell: powershell
       run: |
         cd termux-packages
         ./scripts/run-docker.ps1 git clone https://github.com/ZLangJIT/termux-gcc-riscv packages/gcc-riscv
