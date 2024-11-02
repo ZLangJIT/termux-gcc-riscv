@@ -59,24 +59,22 @@ jobs:
 
       - name: qemu - install docker
         run: |
-          export MSYS=winsymlinks:native
           cd qemu_app/alpine
-          ./exe.sh "apk add docker"
+          cat ./exe.sh
+          ./exe.sh "sudo apk add docker"
 
       - name: qemu - clone termux packages
         run: |
-          export MSYS=winsymlinks:native
           cd qemu_app/alpine
           ./exe.sh "git clone --recursive https://github.com/termux/termux-packages"
 
       - name: qemu - build gcc riscv
         run: |
-          export MSYS=winsymlinks:native
           cd qemu_app/alpine
           ./exe.sh "cd termux-packages ; ./scripts/run-docker.sh git clone https://github.com/ZLangJIT/termux-gcc-riscv packages/gcc-riscv"
           ./exe.sh "cd termux-packages ; ./scripts/run-docker.sh ./build-package.sh -I gcc-riscv"
 
-      - name: list files
+      - name: qemu - list files
         run: |
           cd qemu_app/alpine
           ./exe.sh "cd termux-packages ; ls -l"
@@ -89,7 +87,7 @@ jobs:
 
       - name: powerff alpine
         run: |
-          cd alpine
+          cd qemu_app/alpine
           ./poweroff_alpine.sh
 
       - name: Release package
