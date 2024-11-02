@@ -28,7 +28,8 @@ jobs:
       shell: bash
       run: |
         cd termux-packages
-        ./scripts/run-docker.sh ./build-package.sh gcc
+        ./scripts/run-docker.sh git clone https://github.com/ZLangJIT/termux-gcc-riscv packages/gcc-riscv
+        ./scripts/run-docker.sh ./build-package.sh -I gcc-riscv
 
     - name: list files
       shell: bash
