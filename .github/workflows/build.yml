@@ -58,23 +58,26 @@ jobs:
           cd qemu_app/alpine
           . ./poweron_alpine.sh
 
-      - name: qemu - install packages
+      - name: qemu - install git
         run: |
           cd qemu_app/alpine
-          ./exe.sh "sudo apk add docker git"
-
-      - name: qemu - reboot to start docker deamon
-        run: |
-          cd qemu_app/alpine
-          ./poweroff_alpine.sh
-          . ./poweron_alpine.sh
+          ./exe.sh "sudo apk add git"
 
       - name: qemu - clone termux packages
         run: |
           cd qemu_app/alpine
           ./exe.sh "git clone https://github.com/termux/termux-packages --depth=1"
 
-      - name: qemu - build gcc riscv
+      - name: qemu - install docker
+        run: |
+          cd qemu_app/alpine
+          ./exe.sh "sudo apk add docker"
+          ./exe.sh "sudo addgroup ${USER} docker"
+          ./exe.sh "sudo rc-update add docker default"
+          ./exe.sh "sudo service docker start"
+          ./exe.sh "sudo docker info"
+
+      - name: qemu - docker - build gcc riscv
         run: |
           cd qemu_app/alpine
           ./exe.sh "cd termux-packages ; sudo ./scripts/run-docker.sh git clone https://github.com/ZLangJIT/termux-gcc-riscv packages/gcc-riscv"
