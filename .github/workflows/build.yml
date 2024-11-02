@@ -30,7 +30,7 @@ jobs:
 
       - name: clone qemu_app
         run: |
-          git clone https://github.com/mgood7123/qemu_app
+          git clone https://github.com/mgood7123/qemu_app --depth=1
 
       - name: check if split program is cached
         run: |
@@ -61,13 +61,18 @@ jobs:
       - name: qemu - install packages
         run: |
           cd qemu_app/alpine
-          cat ./exe.sh
           ./exe.sh "sudo apk add docker git"
+
+      - name: qemu - reboot to start docker deamon
+        run: |
+          cd qemu_app/alpine
+          ./poweroff_alpine.sh
+          ./poweron_alpine.sh
 
       - name: qemu - clone termux packages
         run: |
           cd qemu_app/alpine
-          ./exe.sh "git clone --recursive https://github.com/termux/termux-packages"
+          ./exe.sh "git clone https://github.com/termux/termux-packages --depth=1"
 
       - name: qemu - build gcc riscv
         run: |
