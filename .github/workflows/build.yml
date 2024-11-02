@@ -19,29 +19,78 @@ jobs:
       - name: '${{ matrix.icon }} Setup MSYS2'
         uses: msys2/setup-msys2@v2
         with:
-          msystem: MSYS
+          msystem: MINGW64
           update: true
           path-type: strict
           
-      - name: install git and docker
+      - name: install git
         run: |
           pacman -Sy
-          pacman -S --noconfirm --needed git docker
+          pacman -S --noconfirm --needed git
 
-      - name: clone termux packages
+      - name: clone qemu_app
         run: |
-          git clone --recursive https://github.com/termux/termux-packages
+          git clone https://github.com/mgood7123/qemu_app
 
-      - name: build gcc
+      - name: check if split program is cached
         run: |
-          cd termux-packages
-          ./scripts/run-docker.sh git clone https://github.com/ZLangJIT/termux-gcc-riscv packages/gcc-riscv
-          ./scripts/run-docker.sh ./build-package.sh -I gcc-riscv
+          export MSYS=winsymlinks:native
+          cd qemu_app
+          chmod +x ./try_get_release.sh
+          ./try_get_release.sh   mgood7123   qemu_app   storage--split--windows   split.exe.tar
+
+      - name: unpack alpine
+        run: |
+          cd qemu_app
+          ./unpack.sh
+          cd alpine
+          ls -l
+          chmod -v +x *.sh
+
+      - name: install qemu
+        run: |
+          pacman -S --noconfirm --needed pactoys sshpass rsync
+          pacboy -S --noconfirm --needed qemu:p qemu-common:p qemu-guest-agent:p qemu-image-util:p
+
+      - name: poweron alpine
+        run: |
+          cd qemu_app/alpine
+          . ./poweron_alpine.sh
+
+      - name: [qemu] install docker
+        run: |
+          export MSYS=winsymlinks:native
+          cd qemu_app/alpine
+          ./exe.sh "apk add docker"
+
+      - name: [qemu] clone termux packages
+        run: |
+          export MSYS=winsymlinks:native
+          cd qemu_app/alpine
+          ./exe.sh "git clone --recursive https://github.com/termux/termux-packages"
+
+      - name: [qemu] build gcc riscv
+        run: |
+          export MSYS=winsymlinks:native
+          cd qemu_app/alpine
+          ./exe.sh "cd termux-packages ; ./scripts/run-docker.sh git clone https://github.com/ZLangJIT/termux-gcc-riscv packages/gcc-riscv"
+          ./exe.sh "cd termux-packages ; ./scripts/run-docker.sh ./build-package.sh -I gcc-riscv"
 
       - name: list files
         run: |
-          cd termux-packages
-          ls -l
+          cd qemu_app/alpine
+          ./exe.sh "cd termux-packages ; ls -l"
+          ./exe.sh "cd termux-packages ; ls -l out"
+
+      - name: pull packages
+        run: |
+          cd qemu_app/alpine
+          ./pull.sh termux-packages/out
+
+      - name: powerff alpine
+        run: |
+          cd alpine
+          ./poweroff_alpine.sh
 
       - name: Release package
         uses: softprops/action-gh-release@master
@@ -51,6 +100,6 @@ jobs:
           body: |
             gcc riscv
           files: |
-            gcc.deb
+            out/*
           token: ${{ secrets.GITHUB_TOKEN }}
           fail_on_unmatched_files: true
