@@ -57,19 +57,19 @@ jobs:
           cd qemu_app/alpine
           . ./poweron_alpine.sh
 
-      - name: [qemu] install docker
+      - name: qemu - install docker
         run: |
           export MSYS=winsymlinks:native
           cd qemu_app/alpine
           ./exe.sh "apk add docker"
 
-      - name: [qemu] clone termux packages
+      - name: qemu - clone termux packages
         run: |
           export MSYS=winsymlinks:native
           cd qemu_app/alpine
           ./exe.sh "git clone --recursive https://github.com/termux/termux-packages"
 
-      - name: [qemu] build gcc riscv
+      - name: qemu - build gcc riscv
         run: |
           export MSYS=winsymlinks:native
           cd qemu_app/alpine
