@@ -77,8 +77,8 @@ jobs:
       - name: qemu - build gcc riscv
         run: |
           cd qemu_app/alpine
-          ./exe.sh "cd termux-packages ; ./scripts/run-docker.sh git clone https://github.com/ZLangJIT/termux-gcc-riscv packages/gcc-riscv"
-          ./exe.sh "cd termux-packages ; ./scripts/run-docker.sh ./build-package.sh -I gcc-riscv"
+          ./exe.sh "cd termux-packages ; sudo ./scripts/run-docker.sh git clone https://github.com/ZLangJIT/termux-gcc-riscv packages/gcc-riscv"
+          ./exe.sh "cd termux-packages ; sudo ./scripts/run-docker.sh ./build-package.sh -I gcc-riscv"
 
       - name: qemu - list files
         run: |
