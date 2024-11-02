@@ -1,0 +1,49 @@
+name: Termux GCC RiscV
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    # manual trigger
+  #schedule:
+  #  - cron: '0 0 * * *' # https://crontab.guru
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@main
+
+    - name: Trust this directory
+      run: git config --global --add safe.directory '*' # v2.35.3 or later
+
+    - name: clone termux packages
+      shell: bash
+      run: |
+        git clone --recursive https://github.com/termux/termux-packages
+
+    - name: build gcc
+      shell: bash
+      run: |
+        cd termux-packages
+        ./scripts/run-docker.sh ./build-package.sh gcc
+
+    - name: list files
+      shell: bash
+      run: |
+        cd termux-packages
+        ls -l
+
+    - name: Release package
+      uses: softprops/action-gh-release@master
+      with:
+        name: gcc-riscv
+        tag_name:  gcc-risc
+        body: |
+          gcc riscv
+        files: |
+          gcc.deb
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fail_on_unmatched_files: true
