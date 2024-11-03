@@ -63,7 +63,7 @@ jobs:
           cd qemu_app/alpine
           ./exe.sh "sudo sed -i -e 's/v3\.19/v3\.20/g' /etc/apk/repositories"
           ./exe.sh "sudo apk update"
-          ./exe.sh "sudo apk upgrade apk-utils"
+          ./exe.sh "sudo apk upgrade apk-tools"
           ./exe.sh "sudo apk upgrade --available"
 
       - name: qemu - reboot
@@ -88,8 +88,8 @@ jobs:
       - name: qemu - build nix iso
         run: |
           cd qemu_app/alpine
-          ./exe.sh "nix-channel --update"
-          ./exe.sh "nix-env --install --attr nixpkgs.nix"
+          ./exe.sh "sudo nix-channel --update"
+          ./exe.sh "sudo nix-env --install --attr nixpkgs.nix"
 
       - name: qemu - list files
         run: |
