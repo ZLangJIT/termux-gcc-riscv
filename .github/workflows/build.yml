@@ -18,11 +18,11 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixos-24.05
 
-      - run: apt update
+      - run: sudo apt update
 
-      - run: apt search qemu
+      - run: sudo apt search qemu
 
-      - run: apt install qemu-user-aarch64
+      - run: sudo apt install qemu-user-aarch64
 
       - run: nix-build
 
