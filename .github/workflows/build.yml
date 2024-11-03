@@ -61,7 +61,7 @@ jobs:
       - name: qemu - updrade alpine
         run: |
           cd qemu_app/alpine
-          ./exe.sh "sed -i -e 's/v3\.19/v3\.21/g' /etc/apk/repositories"
+          ./exe.sh "sed -i -e 's/v3\.19/v3\.2/g' /etc/apk/repositories"
           ./exe.sh "sudo apk update"
           ./exe.sh "sudo apk upgrade apk-utils"
           ./exe.sh "sudo apk upgrade --available"
