@@ -85,11 +85,20 @@ jobs:
           ./poweroff_alpine.sh
           . poweron_alpine.sh
 
+      - name: qemu - update nix channel
+        run: |
+          cd qemu_app/alpine
+          ./exe.sh "sudo nix-channel --add https://nixos.org/channels/nixos-24.05 nixos"
+          ./exe.sh "sudo nix-channel --update"
+
+      - name: qemu - update nix
+        run: |
+          cd qemu_app/alpine
+          ./exe.sh "sudo nix-env --install --attr nixpkgs.nix"
+
       - name: qemu - build nix iso
         run: |
           cd qemu_app/alpine
-          ./exe.sh "sudo nix-channel --update"
-          ./exe.sh "sudo nix-env --install --attr nixpkgs.nix"
 
       - name: qemu - list files
         run: |
