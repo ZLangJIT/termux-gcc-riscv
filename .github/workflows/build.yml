@@ -24,20 +24,22 @@ jobs:
 
       - run: sudo apt install -y qemu-user-static
 
+      - run: nix-env -q || true
+      
       - run: nix-build
 
       - name: list files
         run: |
           ls -l
 
-      - name: Release package
-        uses: softprops/action-gh-release@master
-        with:
-          name: nixos
-          tag_name:  nixos
-          body: |
-            nixos
-          files: |
-            out/*
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fail_on_unmatched_files: true
+    #   - name: Release package
+    #     uses: softprops/action-gh-release@master
+    #     with:
+    #       name: nixos
+    #       tag_name:  nixos
+    #       body: |
+    #         nixos
+    #       files: |
+    #         out/*
+    #       token: ${{ secrets.GITHUB_TOKEN }}
+    #       fail_on_unmatched_files: true
