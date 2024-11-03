@@ -58,42 +58,33 @@ jobs:
           cd qemu_app/alpine
           . ./poweron_alpine.sh
 
-      - name: qemu - install git
+      - name: qemu - install nix
         run: |
           cd qemu_app/alpine
-          ./exe.sh "sudo apk add git"
+          ./exe.sh "sudo apk add nix"
 
-      - name: qemu - clone termux packages
+      - name: qemu - reboot
         run: |
           cd qemu_app/alpine
-          ./exe.sh "git clone https://github.com/termux/termux-packages --depth=1"
+          ./poweroff_alpine.sh
+          . poweron_alpine.sh
 
-      - name: qemu - install docker
+      - name: qemu - build nix iso
         run: |
           cd qemu_app/alpine
-          ./exe.sh "sudo apk add docker"
-          ./exe.sh "sudo rc-update add docker default"
-          ./exe.sh "sudo service docker start"
-          ./exe.sh "sudo docker info"
-
-      - name: qemu - docker - build gcc riscv
-        run: |
-          cd qemu_app/alpine
-          #./exe.sh "cd termux-packages ; sudo ./scripts/run-docker.sh git clone https://github.com/ZLangJIT/termux-gcc-riscv /tmp/gcc-riscv"
-          #./exe.sh "cd termux-packages ; sudo ./scripts/run-docker.sh sudo mv /tmp/gcc-riscv packages/gcc-riscv"
-          ./exe.sh "cd termux-packages ; sudo ./scripts/run-docker.sh sudo git clone https://github.com/ZLangJIT/termux-gcc-riscv packages/gcc-riscv --depth=1"
-          ./exe.sh "cd termux-packages ; sudo ./scripts/run-docker.sh ./build-package.sh -I gcc-riscv"
+          ./exe.sh "nix-channel --update"
+          ./exe.sh "nix-env --install --attr nixpkgs.nix"
 
       - name: qemu - list files
         run: |
           cd qemu_app/alpine
-          ./exe.sh "cd termux-packages ; ls -l"
-          ./exe.sh "cd termux-packages ; ls -l out"
+          ./exe.sh "ls -l"
+          ./exe.sh "ls -l out"
 
       - name: pull packages
         run: |
           cd qemu_app/alpine
-          ./pull.sh termux-packages/out
+          #./pull.sh termux-packages/out
 
       - name: powerff alpine
         run: |
@@ -103,10 +94,10 @@ jobs:
       - name: Release package
         uses: softprops/action-gh-release@master
         with:
-          name: gcc-riscv
-          tag_name:  gcc-risc
+          name: nixos
+          tag_name:  nixos
           body: |
-            gcc riscv
+            nixos
           files: |
             out/*
           token: ${{ secrets.GITHUB_TOKEN }}
