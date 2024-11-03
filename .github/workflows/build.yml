@@ -61,6 +61,8 @@ jobs:
       - name: qemu - install nix
         run: |
           cd qemu_app/alpine
+          ./exe.sh "sudo apk update"
+          ./exe.sh "sudo apk search nix"
           ./exe.sh "sudo apk add nix"
 
       - name: qemu - reboot
