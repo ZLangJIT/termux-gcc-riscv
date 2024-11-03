@@ -24,8 +24,8 @@ jobs:
 
       - run: sudo apt install -y qemu-user-static
 
-      - run: nix-env -q || true
-      
+      - run: nix-build --dry-run
+
       - run: nix-build
 
       - name: list files
