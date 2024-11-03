@@ -23,6 +23,8 @@ jobs:
       - run: sudo apt search qemu
 
       - run: sudo apt install -y qemu-user-static
+      
+      - run: nix-store -qR $(nix-instantiate default.nix)
 
       - run: nix-build --dry-run
 
