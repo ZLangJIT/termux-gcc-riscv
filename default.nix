@@ -4,4 +4,4 @@ let
   extra-platforms = "aarch64-linux";
   extra-sandbox-paths = "/usr/bin/qemu-user-aarch64";
 in
-pkgs.pkgsCross.aarch64-android.hello
+pkgs.pkgsCross.aarch64-linux.hello
