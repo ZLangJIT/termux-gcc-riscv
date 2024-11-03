@@ -18,7 +18,7 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixos-24.05
 
-      - run: nix-build '<nixpkgs>' --arg crossSystem '{ config = "aarch64"; }' -A hello
+      - run: nix-build '<nixpkgs>' --arg crossSystem '{ config = "armv8-a"; }' -A hello
 
       - name: list files
         run: |
