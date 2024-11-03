@@ -1,4 +1,4 @@
-name: Termux GCC RiscV
+name: Build NixOS Iso
 
 on:
   push:
@@ -8,113 +8,21 @@ on:
   #schedule:
   #  - cron: '0 0 * * *' # https://crontab.guru
 
-defaults:
-  run:
-    shell: msys2 {0}
-
 jobs:
-  build:
-    runs-on: windows-latest
+  tests:
+    runs-on: ubuntu-latest
     steps:
-      - name: '${{ matrix.icon }} Setup MSYS2'
-        uses: msys2/setup-msys2@v2
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v27
         with:
-          msystem: MINGW64
-          update: true
-          path-type: strict
-          
-      - name: install git
-        run: |
-          pacman -Sy
-          pacman -S --noconfirm --needed git
+          nix_path: nixpkgs=channel:nixos-24.05
 
-      - name: clone qemu_app
-        run: |
-          git clone https://github.com/mgood7123/qemu_app --depth=1
+      - run: nix-build
 
-      - name: check if split program is cached
+      - name: list files
         run: |
-          export MSYS=winsymlinks:native
-          cd qemu_app
-          chmod +x ./try_get_release.sh
-          ./try_get_release.sh   mgood7123   qemu_app   storage--split--windows   split.exe.tar
-
-      - name: unpack alpine
-        run: |
-          cd qemu_app
-          ./unpack.sh
-          cd alpine
           ls -l
-          chmod -v +x *.sh
-          mkdir ../vcxserv
-
-      - name: install qemu
-        run: |
-          pacman -S --noconfirm --needed pactoys sshpass rsync
-          pacboy -S --noconfirm --needed qemu:p qemu-common:p qemu-guest-agent:p qemu-image-util:p
-
-      - name: poweron alpine
-        run: |
-          cd qemu_app/alpine
-          . ./poweron_alpine.sh
-
-      - name: qemu - updrade alpine
-        run: |
-          cd qemu_app/alpine
-          ./exe.sh "sudo sed -i -e 's/v3\.19/v3\.20/g' /etc/apk/repositories"
-          ./exe.sh "sudo apk update"
-          ./exe.sh "sudo apk upgrade apk-tools"
-          ./exe.sh "sudo apk upgrade --available"
-
-      - name: qemu - reboot
-        run: |
-          cd qemu_app/alpine
-          ./poweroff_alpine.sh
-          . poweron_alpine.sh
-
-      - name: qemu - install nix
-        run: |
-          cd qemu_app/alpine
-          ./exe.sh "sudo apk update"
-          ./exe.sh "sudo apk search nix"
-          ./exe.sh "sudo apk add nix"
-
-      - name: qemu - reboot
-        run: |
-          cd qemu_app/alpine
-          ./poweroff_alpine.sh
-          . poweron_alpine.sh
-
-      - name: qemu - update nix channel
-        run: |
-          cd qemu_app/alpine
-          ./exe.sh "sudo nix-channel --add https://nixos.org/channels/nixos-24.05-small nixos"
-          ./exe.sh "sudo nix-channel --update"
-
-      - name: qemu - update nix
-        run: |
-          cd qemu_app/alpine
-          ./exe.sh "sudo nix-env --install --attr nixpkgs.nix"
-
-      - name: qemu - build nix iso
-        run: |
-          cd qemu_app/alpine
-
-      - name: qemu - list files
-        run: |
-          cd qemu_app/alpine
-          ./exe.sh "ls -l"
-          ./exe.sh "ls -l out"
-
-      - name: pull packages
-        run: |
-          cd qemu_app/alpine
-          #./pull.sh termux-packages/out
-
-      - name: powerff alpine
-        run: |
-          cd qemu_app/alpine
-          ./poweroff_alpine.sh
 
       - name: Release package
         uses: softprops/action-gh-release@master
