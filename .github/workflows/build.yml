@@ -28,14 +28,12 @@ jobs:
       - uses: cachix/cachix-action@v15
         with:
           name: zlangjit-test-01
-          # this is per-cache read+write auth token
-          signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
           # this is per-cachix-account auth token
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
       - run: nix-store -qR $(nix-instantiate default.nix)
       - run: nix-build --dry-run
-      - run: nix-build
+      - run: cachix watch-exec zlangjit-test-01 -- nix-build
 
       - name: list files
         run: |
