@@ -22,9 +22,7 @@ jobs:
 
       - run: sudo apt search qemu
 
-      - run: sudo apt install -y qemu-user qemu-user-binfmt
-      
-      - run: ls -l /usr/bin/qemu-user-aarch64
+      - run: sudo apt install -y qemu-user-static
 
       - run: nix-build
 
