@@ -66,6 +66,12 @@ jobs:
           ./exe.sh "sudo apk upgrade apk-utils"
           ./exe.sh "sudo apk upgrade --available"
 
+      - name: qemu - reboot
+        run: |
+          cd qemu_app/alpine
+          ./poweroff_alpine.sh
+          . poweron_alpine.sh
+
       - name: qemu - install nix
         run: |
           cd qemu_app/alpine
