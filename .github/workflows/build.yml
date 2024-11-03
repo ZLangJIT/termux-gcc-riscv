@@ -14,20 +14,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: cachix/install-nix-action@v27
+      - run: |
+          sudo apt update
+          sudo apt install -y qemu-user-static
+
+      - uses: cachix/install-nix-action@v30
         with:
-          nix_path: nixpkgs=channel:nixos-24.05
+          nix_path: |
+            nixpkgs=channel:nixos-24.05
+          extra_nix_config: |
+            extra-platforms = riscv64-linux
 
-      - run: sudo apt update
+      - uses: cachix/cachix-action@v15
+        with:
+          name: zlangjit-test-01
+          # this is per-cache read+write auth token
+          signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+          # this is per-cachix-account auth token
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
-      - run: sudo apt search qemu
-
-      - run: sudo apt install -y qemu-user-static
-      
       - run: nix-store -qR $(nix-instantiate default.nix)
-
       - run: nix-build --dry-run
-
       - run: nix-build
 
       - name: list files
