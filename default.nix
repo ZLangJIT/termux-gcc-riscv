@@ -3,4 +3,4 @@ let
   host_pkgs = import nixpkgs {};
   target_pkgs = import nixpkgs { system = "riscv64-linux"; };
 in
-target_pkgs.stdenv
+target_pkgs.stdenvNoCC
