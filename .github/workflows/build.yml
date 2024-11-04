@@ -3,10 +3,8 @@ name: Build NixOS Iso
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
-    # manual trigger
-  #schedule:
-  #  - cron: '0 0 * * *' # https://crontab.guru
+  schedule:
+    - cron: '0 0 * * *' # https://crontab.guru
 
 jobs:
   tests:
