@@ -889,4 +889,5 @@ in
 
   };
 
+  system.stateVersion = lib.mkDefault lib.trivial.release;
 }

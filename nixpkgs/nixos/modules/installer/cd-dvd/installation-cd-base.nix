@@ -46,5 +46,5 @@ with lib;
     done
   '';
 
-  system.stateVersion = lib.mkDefault lib.trivial.release;
+  config.system.stateVersion = lib.mkDefault lib.trivial.release;
 }

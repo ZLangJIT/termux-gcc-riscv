@@ -19,13 +19,17 @@ let
   cfg = config.boot.initrd.systemd;
 
   upstreamUnits = [
-    "basic.target"
-    "ctrl-alt-del.target"
+    "poweroff.target"
+    "reboot.target"
+    "shutdown.target"
     "debug-shell.service"
     "emergency.service"
     "emergency.target"
-    "final.target"
     "halt.target"
+/*
+    "basic.target"
+    "ctrl-alt-del.target"
+    "final.target"
     "initrd-cleanup.service"
     "initrd-fs.target"
     "initrd-parse-etc.service"
@@ -40,12 +44,9 @@ let
     "local-fs.target"
     "multi-user.target"
     "paths.target"
-    "poweroff.target"
-    "reboot.target"
     "rescue.service"
     "rescue.target"
     "rpcbind.target"
-    "shutdown.target"
     "sigpwr.target"
     "slices.target"
     "sockets.target"
@@ -72,6 +73,7 @@ let
     "timers.target"
     "umount.target"
     "systemd-bsod.service"
+*/
   ] ++ cfg.additionalUpstreamUnits;
 
   upstreamWants = [

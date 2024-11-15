@@ -107,7 +107,7 @@ in
     };
 
     earlySetup = mkOption {
-      default = false;
+      default = true;
       type = types.bool;
       description = ''
         Enable setting virtual console options as early as possible (in initrd).

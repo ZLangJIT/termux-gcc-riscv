@@ -142,6 +142,7 @@ if [ "${IN_NIXOS_SYSTEMD_STAGE1:-}" != true ]; then
 
 
     # Start systemd in a clean environment.
-    echo "starting systemd..."
-    exec @systemdExecutable@ "$@"
+    echo "we would do 'starting systemd...' but instead we shall start bash"
+    #exec @systemdExecutable@ "$@"
+    exec bash
 fi

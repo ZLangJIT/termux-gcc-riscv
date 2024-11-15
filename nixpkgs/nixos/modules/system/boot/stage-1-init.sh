@@ -153,6 +153,25 @@ specialMount() {
 }
 source @earlyMountScript@
 
+info
+info "[1;32mlisting contents of /[0m"
+info
+
+ls -l --color /
+
+info
+info "[1;32mlisting contents of /dev[0m"
+info
+
+ls -l --color /dev
+
+info
+info "[1;32mdropping to bash shell[0m"
+info "[1;33mtype 'exit' to continue booting[0m"
+info
+
+bash || true
+
 # Copy initrd secrets from /.initrd-secrets to their actual destinations
 if [ -d "/.initrd-secrets" ]; then
     #

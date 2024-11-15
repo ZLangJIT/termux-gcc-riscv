@@ -31,8 +31,8 @@ jobs:
       - name: build iso --dry-run
         run: nix-build --dry-run -I "$(pwd)/nixpkgs" "<nixpkgs/nixos>" -A config.system.build.isoImage -I nixos-config=iso.nix
 
-      #- name: build iso
-      #  run: nix-build -I "$(pwd)/nixpkgs" -A config.system.build.isoImage -I nixos-config=iso.nix -I $(pwd)
+      - name: build iso
+        run: nix-build -I "$(pwd)/nixpkgs" "<nixpkgs/nixos>" -A config.system.build.isoImage -I nixos-config=iso.nix
 
       - name: list files
         run: ls -lh result/iso
