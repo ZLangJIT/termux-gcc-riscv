@@ -19,7 +19,7 @@ with lib;
     echo
     exec bash
   '';
-  system.build.initialRamdisk = pkgs.makeInitrd {
+  system.build.initialRamdisk = lib.mkForce pkgs.makeInitrd {
     contents = [ { object = system.build.bootStage1; symlink = "/init"; } ];
   };
   # Some additional utilities needed in stage 1, like mount, lvm, fsck
@@ -27,7 +27,7 @@ with lib;
   # copy what we need.  Instead of using statically linked binaries,
   # we just copy what we need from Glibc and use patchelf to make it
   # work.
-  system.build.extraUtils = pkgs.runCommand "extra-utils"
+  system.build.extraUtils = lib.mkForce pkgs.runCommand "extra-utils"
     { nativeBuildInputs = with pkgs.buildPackages; [ nukeReferences bintools ];
       allowedReferences = [ "out" ]; # prevent accidents like glibc being included in the initrd
     }
