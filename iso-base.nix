@@ -856,7 +856,7 @@ in
     boot.loader.timeout = 10;
 
     # Create the ISO image.
-    system.build.isoImage = pkgs.callPackage ../../../lib/make-iso9660-image.nix ({
+    system.build.isoImage = pkgs.callPackage <nixpkgs/nixos/lib/make-iso9660-image.nix> ({
       inherit (config.isoImage) isoName compressImage volumeID contents;
       bootable = config.isoImage.makeBiosBootable;
       bootImage = "/isolinux/isolinux.bin";
