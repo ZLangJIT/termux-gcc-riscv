@@ -8,45 +8,43 @@ with lib;
 let
 
   requiredPackages = map (pkg: setPrio ((pkg.meta.priority or 5) + 3) pkg)
-    [
-#      pkgs.acl
-#      pkgs.attr
-#      pkgs.bashInteractive # bash with ncurses support
-#      pkgs.bzip2
-#      pkgs.coreutils-full
-#      pkgs.cpio
-#      pkgs.curl
-#      pkgs.diffutils
-#      pkgs.findutils
-#      pkgs.gawk
-#      pkgs.stdenv.cc.libc
-#      pkgs.getent
-#      pkgs.getconf
-#      pkgs.gnugrep
-#      pkgs.gnupatch
-#      pkgs.gnused
-#      pkgs.gnutar
-#      pkgs.gzip
-#      pkgs.xz
-#      pkgs.less
-#      pkgs.libcap
-#      pkgs.ncurses
-#      pkgs.netcat
-#      config.programs.ssh.package
-#      pkgs.mkpasswd
-#      pkgs.procps
-#      pkgs.su
-#      pkgs.time
-#      pkgs.util-linux
-#      pkgs.which
-#      pkgs.zstd
+    [ pkgs.acl
+      pkgs.attr
+      pkgs.bashInteractive # bash with ncurses support
+      pkgs.bzip2
+      pkgs.coreutils-full
+      pkgs.cpio
+      pkgs.curl
+      pkgs.diffutils
+      pkgs.findutils
+      pkgs.gawk
+      pkgs.stdenv.cc.libc
+      pkgs.getent
+      pkgs.getconf
+      pkgs.gnugrep
+      pkgs.gnupatch
+      pkgs.gnused
+      pkgs.gnutar
+      pkgs.gzip
+      pkgs.xz
+      pkgs.less
+      pkgs.libcap
+      pkgs.ncurses
+      pkgs.netcat
+      config.programs.ssh.package
+      pkgs.mkpasswd
+      pkgs.procps
+      pkgs.su
+      pkgs.time
+      pkgs.util-linux
+      pkgs.which
+      pkgs.zstd
     ];
 
   defaultPackageNames =
-    [
-#      "perl"
-#      "rsync"
-#      "strace"
+    [ "perl"
+      "rsync"
+      "strace"
     ];
   defaultPackages =
     map

@@ -5,6 +5,7 @@
     <nixpkgs/nixos/modules/installer/cd-dvd/channel.nix>
   ];
 
+  config.boot.kernelparams = [ "console=ttyS0" ];
   config.system.stateVersion = "24.05";
 
   #config.nixpkgs.hostPlatform = "riscv64-linux";
