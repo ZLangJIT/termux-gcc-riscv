@@ -1,5 +1,7 @@
 #! @shell@
 
+set -x
+
 systemConfig=@systemConfig@
 
 export HOME=/root PATH="@path@"
@@ -79,6 +81,24 @@ if [ -n "@readOnlyNixStore@" ]; then
     fi
 fi
 
+echo
+echo "[1;32mlisting contents of /[0m"
+echo
+
+ls -l --color /
+
+echo
+echo "[1;32mlisting contents of /dev[0m"
+echo
+
+ls -l --color /dev
+
+echo
+echo "[1;32mdropping to bash shell[0m"
+echo "[1;33mtype 'exit' to continue booting[0m"
+echo
+
+bash || true
 
 if [ "${IN_NIXOS_SYSTEMD_STAGE1:-}" != true ]; then
     # Use /etc/resolv.conf supplied by systemd-nspawn, if applicable.

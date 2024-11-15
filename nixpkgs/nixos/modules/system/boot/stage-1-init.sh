@@ -1,5 +1,7 @@
 #! @shell@
 
+set -x
+
 targetRoot=/mnt-root
 console=tty1
 verbose="@verbose@"
@@ -76,6 +78,25 @@ info
 info "[1;32m<<< @distroName@ Stage 1 >>>[0m"
 info
 
+info
+info "[1;32mlisting contents of /[0m"
+info
+
+ls -l --color /
+
+info
+info "[1;32mlisting contents of /dev[0m"
+info
+
+ls -l --color /dev
+
+info
+info "[1;32mdropping to bash shell[0m"
+info "[1;33mtype 'exit' to continue booting[0m"
+info
+
+bash || true
+
 # Make several required directories.
 mkdir -p /etc/udev
 touch /etc/fstab # to shut up mount
@@ -149,28 +170,9 @@ specialMount() {
   local fsType="$4"
 
   mkdir -m 0755 -p "$mountPoint"
-  mount -n -t "$fsType" -o "$options" "$device" "$mountPoint"
+  mount -v -n -t "$fsType" -o "$options" "$device" "$mountPoint"
 }
 source @earlyMountScript@
-
-info
-info "[1;32mlisting contents of /[0m"
-info
-
-ls -l --color /
-
-info
-info "[1;32mlisting contents of /dev[0m"
-info
-
-ls -l --color /dev
-
-info
-info "[1;32mdropping to bash shell[0m"
-info "[1;33mtype 'exit' to continue booting[0m"
-info
-
-bash || true
 
 # Copy initrd secrets from /.initrd-secrets to their actual destinations
 if [ -d "/.initrd-secrets" ]; then
