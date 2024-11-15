@@ -80,23 +80,24 @@
       If you need a wireless connection, type
       `sudo systemctl start wpa_supplicant` and configure a
       network using `wpa_cli`. See the NixOS manual for details.
-    '' + optionalString config.services.xserver.enable ''
+    '' + lib.optionalString config.services.xserver.enable ''
 
       Type `sudo systemctl start display-manager' to
       start the graphical user interface.
     '';
 
     # allow nix-copy to live system
-    nix.settings.trusted-users = [ "root" "nixos" ];
+    config.nix.settings.trusted-users = [ "root" "nixos" ];
 
     # Prevent installation media from evacuating persistent storage, as their
     # var directory is not persistent and it would thus result in deletion of
     # those entries.
-    environment.etc."systemd/pstore.conf".text = ''
+    config.environment.etc."systemd/pstore.conf".text = ''
       [PStore]
       Unlink=no
     '';
-    networking.firewall.logRefusedConnections = mkDefault false;
+
+    config.networking.firewall.logRefusedConnections = mkDefault false;
 
 
   #config.nixpkgs.hostPlatform = "riscv64-linux";
