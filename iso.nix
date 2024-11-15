@@ -28,7 +28,7 @@ with lib;
       ''}
     '';
 
-  bootStage1_script = pkgs.writeScript "stage-1-init" ''
+  pkgs.writeScript "sh_stage-1-init" ''
     #!${shell}
     echo
     echo "[1;32m<<< NixOS Stage 1 >>>[0m"
@@ -37,7 +37,7 @@ with lib;
   '';
 
   system.build.bootStage1 = mkForce (pkgs.substituteAll {
-    src = "${bootStage1_script}/stage-1-init.sh";
+    src = "${sh_stage-1-init}";
 
     shell = "${extraUtils}/bin/ash}";
 
