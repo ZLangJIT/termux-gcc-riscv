@@ -28,7 +28,7 @@ jobs:
       #- run: nix-store -qR $(nix-instantiate default.nix)
       #- run: nix-build --dry-run
       #- run: nix-build
-      - run: export NIX_SEARCH_PATH=$(pwd):$NIX_SEARCH_PATH ; nix-build '<nixpkgs/nixos>' -A config.system.build.isoImage -I nixos-config=iso.nix
+      - run: nix-build '<nixpkgs/nixos>' -A config.system.build.isoImage -I nixos-config=iso.nix -I .
 
       - name: list files
         run: ls -lh result/iso
