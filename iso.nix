@@ -5,6 +5,8 @@
     <nixpkgs/nixos/modules/installer/cd-dvd/channel.nix>
   ];
 
+  config.system.stateVersion = "24.05";
+
   #config.nixpkgs.hostPlatform = "riscv64-linux";
 
   # required and default packages are controlled via
