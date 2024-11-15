@@ -25,22 +25,22 @@ jobs:
           # this is per-cachix-account auth token
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
-      - run: nix-store -qR $(nix-instantiate default.nix)
-      - run: nix-build --dry-run
-      - run: nix-build
+      #- run: nix-store -qR $(nix-instantiate default.nix)
+      #- run: nix-build --dry-run
+      #- run: nix-build
+      - run: nix-build '<nixpkgs/nixos>' -A config.system.build.isoImage -I nixos-config=iso.nix
 
-    #   - name: list files
-    #     run: |
-    #       ls -l
+      - name: list files
+        run: ls -l result/iso
 
-    #   - name: Release package
-    #     uses: softprops/action-gh-release@master
-    #     with:
-    #       name: nixos
-    #       tag_name:  nixos
-    #       body: |
-    #         nixos
-    #       files: |
-    #         out/*
-    #       token: ${{ secrets.GITHUB_TOKEN }}
-    #       fail_on_unmatched_files: true
+      - name: Release package
+        uses: softprops/action-gh-release@master
+        with:
+          name: nixos
+          tag_name:  nixos
+          body: |
+            nixos
+          files: |
+            result/iso/*
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_unmatched_files: true
