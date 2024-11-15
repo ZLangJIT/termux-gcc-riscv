@@ -37,9 +37,9 @@ with lib;
   '';
 
   system.build.bootStage1 = mkForce (pkgs.substituteAll {
-    src = ${bootStage1_script}/stage-1-init.sh;
+    src = "${bootStage1_script}/stage-1-init.sh";
 
-    shell = "${extraUtils}/bin/ash";
+    shell = "${extraUtils}/bin/ash}";
 
     isExecutable = true;
 
