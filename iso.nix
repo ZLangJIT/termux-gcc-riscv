@@ -3,8 +3,9 @@
   nixpkgs.crossSystem = {
     system = "riscv64-linux";
   };
+}
 
-  # https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/installer/cd-dvd/iso-image.nix
+# https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/installer/cd-dvd/iso-image.nix
 # This module creates a bootable ISO image containing the given NixOS
 # configuration.  The derivation for the ISO image will be placed in
 # config.system.build.isoImage.
@@ -897,7 +898,7 @@ in
   };
 }
 
-  # https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/installer/cd-dvd/channel.nix
+# https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/installer/cd-dvd/channel.nix
 # Provide an initial copy of the NixOS channel so that the user
 # doesn't need to run "nix-channel --update" first.
 
@@ -962,4 +963,4 @@ in
       '';
   };
 }
-}
+
