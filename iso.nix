@@ -9,7 +9,7 @@ with lib;
     <nixpkgs/nixos/modules/installer/cd-dvd/channel.nix>
   ];
 
-  boot.kernelParams = [ "console=tty1" "boot.debugtrace" ];
+  boot.kernelParams = [ "console=ttyS0" ];
   system.stateVersion = "24.05";
 
   boot.initrd.availableKernelModules = [ "virtio_net" "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_scsi" "9p" "9pnet_virtio" ];
