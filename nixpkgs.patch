@@ -1,17 +1,4 @@
 patch file
-diff --git a/nixos/modules/config/console.nix b/nixos/modules/config/console.nix
-index 5aadc0836..a5138a2cd 100644
---- a/nixos/modules/config/console.nix
-+++ b/nixos/modules/config/console.nix
-@@ -107,7 +107,7 @@ in
-     };
- 
-     earlySetup = mkOption {
--      default = false;
-+      default = true;
-       type = types.bool;
-       description = ''
-         Enable setting virtual console options as early as possible (in initrd).
 diff --git a/nixos/modules/config/system-path.nix b/nixos/modules/config/system-path.nix
 index 562100ad6..d9d93d508 100644
 --- a/nixos/modules/config/system-path.nix
