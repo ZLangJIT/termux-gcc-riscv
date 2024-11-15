@@ -21,7 +21,7 @@ jobs:
 
       - uses: cachix/cachix-action@v15
         with:
-          name: zlangjit-test-01
+          name: zlangjit-riscv64-01
           # this is per-cachix-account auth token
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
