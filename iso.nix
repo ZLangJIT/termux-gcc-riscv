@@ -11,10 +11,10 @@
   config.boot.initrd.availableKernelModules = [ "virtio_net" "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_scsi" "9p" "9pnet_virtio" ];
   config.boot.initrd.kernelModules = [ "virtio_balloon" "virtio_console" "virtio_rng" "virtio_gpu" ];
 
-  lib.xdg.autostart.enable = mkDefault false;
-  lib.xdg.icons.enable = mkDefault false;
-  lib.xdg.mime.enable = mkDefault false;
-  lib.xdg.sounds.enable = mkDefault false;
+  lib.xdg.autostart.enable = lib.mkDefault false;
+  lib.xdg.icons.enable = lib.mkDefault false;
+  lib.xdg.mime.enable = lib.mkDefault false;
+  lib.xdg.sounds.enable = lib.mkDefault false;
 
   config.boot.blacklistedKernelModules = [
     # Obscure network protocols
@@ -62,8 +62,8 @@
 
     # Allow passwordless sudo from nixos user
     config.security.sudo = {
-      enable = mkDefault true;
-      wheelNeedsPassword = mkImageMediaOverride false;
+      enable = lib.mkDefault true;
+      wheelNeedsPassword = lib.mkImageMediaOverride false;
     };
 
     # Automatically log in at the virtual consoles.
@@ -97,7 +97,7 @@
       Unlink=no
     '';
 
-    config.networking.firewall.logRefusedConnections = mkDefault false;
+    config.networking.firewall.logRefusedConnections = lib.mkDefault false;
 
 
   #config.nixpkgs.hostPlatform = "riscv64-linux";
