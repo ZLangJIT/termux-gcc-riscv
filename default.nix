@@ -3,4 +3,4 @@ let
   pkgs = import nixpkgs {
     crossSystem = "riscv64-linux";
   };
-in pkgs.pkgsCross.riscv64-linux.stdenv
+in pkgs.pkgsCross.riscv64.stdenv
