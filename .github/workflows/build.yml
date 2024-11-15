@@ -31,7 +31,7 @@ jobs:
       - run: nix-build '<nixpkgs/nixos>' -A config.system.build.isoImage -I nixos-config=iso.nix
 
       - name: list files
-        run: ls -l result/iso
+        run: ls -lh result/iso
 
       - name: Release package
         uses: softprops/action-gh-release@master

@@ -8,5 +8,5 @@
     <nixpkgs/nixos/modules/installer/cd-dvd/channel.nix>
   ];
   environment.systemPackages = [ pkgs.neovim ];
-  isoImage.squashfsCompression = "gzip -Xcompression-level 1";
+  #isoImage.squashfsCompression = "gzip -Xcompression-level 1";
 }
