@@ -4,30 +4,38 @@ with config;
 with lib;
 
 {
+
   imports = [
     <nixpkgs/nixos/modules/installer/cd-dvd/iso-image.nix>
     <nixpkgs/nixos/modules/installer/cd-dvd/channel.nix>
   ];
 
+  # qemu reads from ttyS0
   boot.kernelParams = [ "console=ttyS0" ];
+
   system.stateVersion = "24.05";
 
   system.build.bootStage1 = pkgs.writeScript "stage1" ''
     #!${shell}
     echo
-    echo "[1;32m<<< NotOS Stage 1 >>>[0m"
+    echo "[1;32m<<< NixOS Stage 1 >>>[0m"
     echo
     exec bash
   '';
-  system.build.initialRamdisk = lib.mkForce pkgs.makeInitrd {
+
+  system.build.initialRamdisk = mkForce pkgs.makeInitrd {
     contents = [ { object = system.build.bootStage1; symlink = "/init"; } ];
   };
-  # Some additional utilities needed in stage 1, like mount, lvm, fsck
+
+  # no lvm
+
+  # Some additional utilities needed in stage 1, like mount, fsck
   # etc.  We don't want to bring in all of those packages, so we just
   # copy what we need.  Instead of using statically linked binaries,
   # we just copy what we need from Glibc and use patchelf to make it
   # work.
-  system.build.extraUtils = lib.mkForce pkgs.runCommand "extra-utils"
+  system.build.extraUtils = mkForce pkgs.runCommand "extra-utils"
+
     { nativeBuildInputs = with pkgs.buildPackages; [ nukeReferences bintools ];
       allowedReferences = [ "out" ]; # prevent accidents like glibc being included in the initrd
     }
@@ -68,9 +76,9 @@ with lib;
       copy_bin_and_libs ${pkgs.util-linux}/sbin/blkid
 
       # Copy udev.
-      copy_bin_and_libs ${udev}/bin/udevadm
-      copy_bin_and_libs ${udev}/lib/systemd/systemd-sysctl
-      for BIN in ${udev}/lib/udev/*_id # */
+      copy_bin_and_libs ${config.systemd.package}/bin/udevadm
+      copy_bin_and_libs ${config.systemd.package}/lib/systemd/systemd-sysctl
+      for BIN in ${config.systemd.package}/lib/udev/*_id # */
 	do
           copy_bin_and_libs $BIN
       done
@@ -164,7 +172,9 @@ with lib;
       ${config.boot.initrd.extraUtilsCommandsTest}
       fi
     '';
+
   boot.initrd.availableKernelModules = [ ];
+
   #boot.initrd.availableKernelModules = [ "virtio_net" "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_scsi" ];
   boot.initrd.kernelModules = [ "virtio_balloon" "virtio_console" "virtio_rng" "virtio_gpu" ];
 
@@ -219,7 +229,7 @@ with lib;
 
     # Allow passwordless sudo from nixos user
     security.sudo = {
-      enable = lib.mkDefault true;
+      enable = mkDefault true;
       wheelNeedsPassword = mkImageMediaOverride false;
     };
 
