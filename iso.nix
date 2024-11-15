@@ -15,13 +15,13 @@ with lib;
 
   system.stateVersion = "24.05";
 
-  system.build.bootStage1 = pkgs.writeScript "stage1" ''
+  system.build.bootStage1 = mkForce (pkgs.writeScript "stage1" ''
     #!${shell}
     echo
     echo "[1;32m<<< NixOS Stage 1 >>>[0m"
     echo
     exec bash
-  '';
+  '');
 
   system.build.initialRamdisk = mkForce (pkgs.makeInitrd {
     contents = [ { object = system.build.bootStage1; symlink = "/init"; } ];
