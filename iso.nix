@@ -15,6 +15,26 @@ with lib;
 
   system.stateVersion = "24.05";
 
+  let {
+  s1i = pkgs.writeScript "stage-1-init" ''
+    #!${shell}
+    echo
+    echo "[1;32m<<< NixOS Stage 1 >>>[0m"
+    echo
+    exec bash
+  '';
+  } in {
+  system.build.bootStage1 = mkForce (pkgs.substituteAll {
+    src = "${s1i}/stage-1-init.sh";
+
+    shell = "${extraUtils}/bin/ash}";
+
+    isExecutable = true;
+
+    inherit extraUtils fsInfo setHostId;
+
+    inherit (config.system.nixos) distroName;
+
     fsInfo =
       let f = fs: [ fs.mountPoint (if fs.device != null then fs.device else "/dev/disk/by-label/${fs.label}") fs.fsType (builtins.concatStringsSep "," fs.options) ];
       in pkgs.writeText "initrd-fsinfo" (concatStringsSep "\n" (concatMap f fileSystems));
@@ -27,26 +47,8 @@ with lib;
         echo -ne "\x''${hi:6:2}\x''${hi:4:2}\x''${hi:2:2}\x''${hi:0:2}" > /etc/hostid
       ''}
     '';
-
-  s1i = pkgs.writeScript "stage-1-init" ''
-    #!${shell}
-    echo
-    echo "[1;32m<<< NixOS Stage 1 >>>[0m"
-    echo
-    exec bash
-  '';
-
-  system.build.bootStage1 = mkForce (pkgs.substituteAll {
-    src = "${s1i}/stage-1-init.sh";
-
-    shell = "${extraUtils}/bin/ash}";
-
-    isExecutable = true;
-
-    inherit extraUtils fsInfo setHostId;
-
-    inherit (config.system.nixos) distroName;
   });
+  }
 
   system.build.initialRamdisk = mkForce (pkgs.makeInitrd {
     contents = [ { object = system.build.bootStage1; symlink = "/init"; } ];
