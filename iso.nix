@@ -15,39 +15,39 @@ with lib;
 
   system.stateVersion = "24.05";
 
-  let {
-  s1i = pkgs.writeScript "stage-1-init" ''
-    #!${shell}
-    echo
-    echo "[1;32m<<< NixOS Stage 1 >>>[0m"
-    echo
-    exec bash
-  '';
-  } in {
-  system.build.bootStage1 = mkForce (pkgs.substituteAll {
-    src = "${s1i}/stage-1-init.sh";
-
-    shell = "${extraUtils}/bin/ash}";
-
-    isExecutable = true;
-
-    inherit extraUtils fsInfo setHostId;
-
-    inherit (config.system.nixos) distroName;
-
-    fsInfo =
-      let f = fs: [ fs.mountPoint (if fs.device != null then fs.device else "/dev/disk/by-label/${fs.label}") fs.fsType (builtins.concatStringsSep "," fs.options) ];
-      in pkgs.writeText "initrd-fsinfo" (concatStringsSep "\n" (concatMap f fileSystems));
-
-    setHostId = optionalString (config.networking.hostId != null) ''
-      hi="${config.networking.hostId}"
-      ${if pkgs.stdenv.isBigEndian then ''
-        echo -ne "\x''${hi:0:2}\x''${hi:2:2}\x''${hi:4:2}\x''${hi:6:2}" > /etc/hostid
-      '' else ''
-        echo -ne "\x''${hi:6:2}\x''${hi:4:2}\x''${hi:2:2}\x''${hi:0:2}" > /etc/hostid
-      ''}
+  let
+    stage_1_init = pkgs.buildPackages.writeShellScriptBin "stage-1-init" ''
+      #!${shell}
+      echo
+      echo "[1;32m<<< NixOS Stage 1 >>>[0m"
+      echo
+      exec bash
     '';
-  });
+  in {
+    system.build.bootStage1 = mkForce (pkgs.substituteAll {
+      src = "${s1i}/stage-1-init.sh";
+  
+      shell = "${extraUtils}/bin/ash}";
+  
+      isExecutable = true;
+  
+      inherit extraUtils fsInfo setHostId;
+  
+      inherit (config.system.nixos) distroName;
+  
+      fsInfo =
+        let f = fs: [ fs.mountPoint (if fs.device != null then fs.device else "/dev/disk/by-label/${fs.label}") fs.fsType (builtins.concatStringsSep "," fs.options) ];
+        in pkgs.writeText "initrd-fsinfo" (concatStringsSep "\n" (concatMap f fileSystems));
+  
+      setHostId = optionalString (config.networking.hostId != null) ''
+        hi="${config.networking.hostId}"
+        ${if pkgs.stdenv.isBigEndian then ''
+          echo -ne "\x''${hi:0:2}\x''${hi:2:2}\x''${hi:4:2}\x''${hi:6:2}" > /etc/hostid
+        '' else ''
+          echo -ne "\x''${hi:6:2}\x''${hi:4:2}\x''${hi:2:2}\x''${hi:0:2}" > /etc/hostid
+        ''}
+      '';
+    });
   }
 
   system.build.initialRamdisk = mkForce (pkgs.makeInitrd {
@@ -79,7 +79,7 @@ with lib;
 
       # Copy BusyBox.
       for BIN in ${pkgs.busybox}/{s,}bin/* # */
-	do
+      do
           copy_bin_and_libs $BIN
       done
 

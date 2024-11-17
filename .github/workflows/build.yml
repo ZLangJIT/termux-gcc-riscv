@@ -28,6 +28,7 @@ jobs:
           # per-cachix-account auth token
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
+      # nix-build --dry-run "<nixpkgs/nixos>" -A pkgs.bash
       - name: build iso --dry-run
         run: nix-build --dry-run -I "$(pwd)/nixpkgs" "<nixpkgs/nixos>" -A config.system.build.isoImage -I nixos-config=iso.nix
 
